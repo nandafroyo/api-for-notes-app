@@ -18,5 +18,11 @@ Route::group(['middleware' => ['api']], function () {
     Route::post('auth/signup', 'AuthController@signup');
     Route::post('auth/signin', 'AuthController@signin');
     Route::post('auth/signout', 'AuthController@signout');
-    Route::post('auth/profile', 'AuthController@profile');
+
+    Route::group(['middleware' => ['auth:api']], function () {
+        Route::post('/profile', 'UserController@profile');
+        Route::post('/note', 'NoteController@create');
+        Route::get('/note', 'NoteController@index');
+        Route::get('/note/{id}', 'NoteController@show');
+    });
 });
