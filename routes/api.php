@@ -20,9 +20,11 @@ Route::group(['middleware' => ['api']], function () {
     Route::post('auth/signout', 'AuthController@signout');
 
     Route::group(['middleware' => ['auth:api']], function () {
-        Route::post('/profile', 'UserController@profile');
+        Route::get('/profile', 'UserController@profile');
         Route::post('/note', 'NoteController@create');
         Route::get('/note', 'NoteController@index');
         Route::get('/note/{id}', 'NoteController@show');
+        Route::put('/note/{id}', 'NoteController@update');
+        Route::delete('/note/{id}', 'NoteController@delete');
     });
 });

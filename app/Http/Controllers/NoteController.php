@@ -39,4 +39,43 @@ class NoteController extends Controller
 
         return $createNote;
     }
+
+    public function update(Request $request, $id) {
+        $this->validate($request, [
+            'title' => 'required',
+            'body'  => 'required',
+        ]);
+
+        $userId = $request->user()->id;
+        $getNote = User::find($userId)->notes()->where('id', $id)->first();
+        
+        if (!$getNote) {
+            return response()->json(['error' => 'Note ID not found!'], 404);
+        };
+
+        $getNote->title = $request->title;
+        $getNote->body = $request->body;
+
+        $getNote->save();
+
+        return $getNote;
+    }
+
+    public function delete(Request $request, $id) {
+        $userId = $request->user()->id;
+        $getNote = User::find($userId)->notes()->where('id', $id)->first();
+        
+        if (!$getNote) {
+            return response()->json(['error' => 'Note ID not found!'], 404);
+        };
+
+        $noteId = $getNote->id;
+
+        $getNote->delete();
+
+        return response()->json([
+                    'success' => true,
+                    'message' => 'Note ID '. $noteId .' Deleted Successfully'
+                ], 200);
+    }
 }
